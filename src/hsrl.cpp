@@ -5,6 +5,7 @@
 #include <lua/lauxlib.hpp>
 #include <lua/xlua.hpp>
 #include <utils/fnv.hpp>
+#include <fstream>
 
 int hsrl::print(lua_State* state) {
   if (const auto str = luaL_checkstring(state, 1))
@@ -23,20 +24,49 @@ int hsrl::getreg(lua_State* state) {
   return 1;
 }
 
+int hsrl::writefile(lua_State* state) {
+  const auto path = luaL_checkstring(state, 1);
+  const auto data = luaL_checkstring(state, 2);
+
+  if (!path || !data) {
+    lua_pushboolean(state, false);
+    return 1;
+  }
+
+  std::ofstream file { path };
+
+  if (!file.is_open()) {
+    lua_pushboolean(state, false);
+    return 1;
+  }
+
+  file << data;
+  file.close();
+
+  lua_pushboolean(state, true);
+  return 1;
+}
+
 int hsrl::window::_new(lua_State* state) {
   const auto title = luaL_checkstring(state, 1);
+
+  std::printf("Creating a new window: %s\n", title);
 
   if (!title)
     return 0;
 
   const auto window = (ui::scripts::window_t*)(lua_newuserdata(state, sizeof(ui::scripts::window_t)));
+  std::printf("Created userdata: %p\n", window);
   luaL_setmetatable(state, "HSRLWindow");
+  std::printf("Set metatable\n");
 
   new (window) ui::scripts::window_t();
   window->title = title;
+  std::printf("Initialized the window\n");
 
   std::unique_lock guard{ ui::scripts::windows_mutex };
   ui::scripts::windows.emplace_back(window);
+  std::printf("Added the window to the list\n");
 
   return 1;
 }
@@ -146,6 +176,7 @@ static constexpr luaL_Reg hsrllib[] = {
   { "clear", hsrl::clear },
   { "getreg", hsrl::getreg },
   { "getflag", hsrl::getflag },
+  { "writefile", hsrl::writefile },
   { nullptr, nullptr }
 };
 

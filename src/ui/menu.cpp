@@ -33,8 +33,13 @@ void ui::menu::render() {
       if (!code.empty() && code.find_first_not_of(" \t\n\v\f\r") != std::string::npos) {
         const auto compiled = runtime::compile(code);
 
-        if (compiled.has_value())
+        if (compiled.has_value()) {
+          std::printf("Script: %s\n", compiled.value().c_str());
           runtime::do_buffer(compiled.value());
+          std::printf("Executed the script\n");
+        } else {
+          std::printf("Failed to compile the script\n");
+        }
       }
     }
 

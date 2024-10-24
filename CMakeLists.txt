@@ -25,3 +25,5 @@ file(GLOB_RECURSE SOURCES
 add_library(library SHARED ${SOURCES})
 
 target_link_libraries(library "minhook/minhook.x64")
+target_link_libraries(library "luau/Luau.Compiler")
+target_link_libraries(library "luau/Luau.Ast")

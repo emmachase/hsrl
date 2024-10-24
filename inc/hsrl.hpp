@@ -6,6 +6,7 @@ namespace hsrl {
   int print(lua_State* state);
   int clear(lua_State* state);
   int getreg(lua_State* state);
+  int writefile(lua_State* state);
 
   namespace window {
     int _new(lua_State* state);

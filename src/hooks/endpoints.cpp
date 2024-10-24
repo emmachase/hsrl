@@ -58,8 +58,12 @@ long long __stdcall hooks::endpoints::wndproc(HWND hwnd, unsigned int message, u
   return CallWindowProcA(hooks::wndproc.get_trampoline<decltype(&hooks::endpoints::wndproc)>(), hwnd, message, wparam, lparam);
 }
 
+bool ran = false;
 int hooks::endpoints::loadbuffer(lua_State* state, const char* chunk, size_t size, const char* name) {
   utils::call_once(hooks::loadbuffer.storage.init_flag, [&] {
+    if (ran) return;
+    ran = true;
+
     hooks::present.install_swap_chain(8, &hooks::endpoints::present);
     hooks::resize_buffers.install_swap_chain(13, &hooks::endpoints::resize_buffers);
 

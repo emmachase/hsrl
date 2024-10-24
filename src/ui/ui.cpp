@@ -39,7 +39,7 @@ void ui::end() {
 }
 
 long long ui::handle_message(HWND window, unsigned int message, unsigned long long wparam, long long lparam) {
-  if (message == WM_KEYDOWN && wparam == VK_INSERT)
+  if (message == WM_KEYDOWN && wparam == VK_DELETE)
     ui::menu::opened = !ui::menu::opened;
 
   return ImGui_ImplWin32_WndProcHandler(window, message, wparam, lparam);

@@ -21,3 +21,10 @@ cmake-build-debug
 /loader/target
 /*.lua
 /build
+/x64
+*.vcxproj
+*.vcxproj.filters
+*.sln
+Debug
+Release
+/luau
